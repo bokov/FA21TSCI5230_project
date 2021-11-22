@@ -33,6 +33,8 @@ We used bi-directional stepwise selection with the Bayes Information Criterion (
 ```{r regression model, echo=FALSE}
 #' echo=FALSE will prevent the printing of the R code that generated the plot
 
+#' [model summary goes here]'
+
 #' Fitting data to appropriate statistic linear model with your predictors
 fit <- lm(_______ ~ _______, data = ________);
 summary(fit);
