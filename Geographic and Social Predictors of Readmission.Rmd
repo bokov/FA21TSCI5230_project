@@ -16,7 +16,7 @@ csl: apa-6th-edition.csl
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
-packageList <- c("knitr","Publish","ggplot2","rio","GGally","dplyr","pander","readr","synthpop", "rmarkdown", "readxl", "tibble", "broom", "scales", "ModelMetrics")
+packageList <- c("knitr","Publish","ggplot2","rio","GGally","dplyr","pander","readr","synthpop", "rmarkdown", "readxl", "tibble", "broom", "scales", "ModelMetrics","printr");
 for(package in packageList){
   if(!require(package,character.only = TRUE)){
     install.packages(package);require(package,character.only = TRUE);}
@@ -61,28 +61,36 @@ We then made predictions on out-of-sample data (i.e. the training set) without r
 #' echo=FALSE will prevent the printing of the R code that generated the plot
 plot(dtest$NOREADMISSION ~ predict(fit, dtest))
 
-fitRMSE <- ModelMetrics::rmse(predict(fit, dtest), dtest$NOREADMISSION)
-table(is.na(predict(fit)))
+fitRMSE <- augment(fit) %>% with(ModelMetrics::rmse(.fitted,NOREADMISSION))
+#table(is.na(predict(fit)))
 
 ```
-The root mean square error is `r fitRMSE`
 
-Starting model results:
+The root mean square error is `r fitRMSE`. Starting model results:
 ```{r summary_of_fit, echo=FALSE}
 ## Edgar
-
+tidy(fit);
+glance(fit);
 ```
 
 BIC model predicted vs observed:
+
 ```{r observe_vs_pred_fit_bic, echo=FALSE}
 
-fitBIC_rmse <- ModelMetrics::rmse(predict(fitBIC, dtest), dtest$NOREADMISSION)
-table(is.na(predict(fitBIC)))
+plot(dtest$NOREADMISSION ~ predict(fitBIC, dtest))
+
+fitBICRMSE <- augment(fitBIC) %>% with(ModelMetrics::rmse(.fitted,NOREADMISSION))
+#table(is.na(predict(fitBIC)))
 
 ```
-BIC model results:
+
+The RMSE for the model with stepwise-selected variables was `r fitBICRMSE`. The 
+BIC model results were as follows:
 ```{r summary_of_fit_bic, echo=FALSE}
 ## Jia
+tidy(fitBIC);
+glance(fitBIC);
+
 ```
 
 \newpage

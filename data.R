@@ -59,7 +59,8 @@ character.names <- subset(selection, Is.numeric == 0)$rowname # c("ZCTA", "REGIO
 dat1 <- dat0[, c(character.names, select.names)]
 sum(is.na(dat1))
 #dat1 <- sapply(dat1, function(xx) {ifelse(is.na(xx), median(xx, na.rm = TRUE), xx)}) %>% as.data.frame() # replace NA with median value
-dat1 <- mutate(dat1,across(where(is.numeric),~coalesce(.x,median(.x,na.rm=T))));
+#dat1 <- mutate(dat1,across(where(is.numeric),~coalesce(.x,median(.x,na.rm=T))));
+dat1 <- mutate(dat1,across(where(is.numeric),function(xx){coalesce(xx,median(xx,na.rm=T))}));
 sum(is.na(dat1))
 
 
